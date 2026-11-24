@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>看雪帖 · 湖心亭一点</title>
+<style>
+  :root{
+    --red:#A5191E; --deep:#7C1116; --gold:#C9A86A; --lightgold:#DCC08A;
+    --paper:#F7F1E3; --card:#FFFDF7; --ink:#2B2622; --gray:#8A7F72;
+  }
+  *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+  body{
+    font-family:"Noto Serif SC","Songti SC","STSong",serif;
+    background:var(--paper); color:var(--ink); min-height:100vh;
+    display:flex; justify-content:center; align-items:flex-start;
+  }
+  .wrap{width:100%;max-width:480px;min-height:100vh;padding:28px 22px 60px;position:relative}
+  .snow-bg{position:fixed;inset:0;pointer-events:none;z-index:0;overflow:hidden}
+  .flake{position:absolute;top:-20px;color:#C9A86A;opacity:.35;animation:fall linear infinite}
+  @keyframes fall{to{transform:translateY(110vh) translateX(20px)}}
+  .view{display:none;position:relative;z-index:1;animation:fadein .5s ease}
+  .view.active{display:block}
+  @keyframes fadein{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:none}}
+
+  .seal{
+    width:64px;height:64px;border-radius:12px;background:var(--red);color:#FBF3E3;
+    display:flex;align-items:center;justify-content:center;font-size:26px;font-weight:700;
+    margin:0 auto 14px;box-shadow:0 6px 18px rgba(165,25,30,.28);letter-spacing:2px;
+  }
+  h1{text-align:center;font-size:34px;letter-spacing:10px;margin-bottom:6px}
+  .subtitle{text-align:center;color:var(--gray);font-size:14px;letter-spacing:2px;margin-bottom:26px}
+  .divider{width:56px;height:2px;background:var(--gold);margin:0 auto 26px;border-radius:2px}
+
+  .intro-card{
+    background:var(--card);border:1px solid #E8DCC5;border-radius:18px;padding:22px 20px;
+    line-height:2;font-size:15px;box-shadow:0 4px 16px rgba(43,38,34,.06);margin-bottom:20px;
+  }
+  .intro-card p{margin-bottom:10px}
+  .rule{display:flex;gap:10px;align-items:flex-start;margin-bottom:10px;font-size:14px}
+  .rule .dot{width:22px;height:22px;border-radius:50%;background:var(--lightgold);color:var(--deep);
+    display:flex;align-items:center;justify-content:center;font-size:12px;flex-shrink:0;margin-top:3px}
+
+  .btn{
+    display:block;width:100%;padding:16px;border:none;border-radius:14px;
+    background:var(--red);color:#FBF3E3;font-size:17px;letter-spacing:6px;
+    font-family:inherit;cursor:pointer;box-shadow:0 6px 16px rgba(165,25,30,.25);
+    transition:transform .15s ease, box-shadow .15s ease;
+  }
+  .btn:active{transform:scale(.97)}
+  .btn.ghost{background:transparent;color:var(--deep);border:1.5px solid var(--gold);
+    box-shadow:none;font-size:15px;margin-top:12px}
+
+  .meta-row{display:flex;gap:10px;margin-bottom:18px}
+  .meta-row input{
+    flex:1;padding:13px 14px;border:1.5px solid var(--gold);border-radius:12px;
+    background:var(--card);font-family:inherit;font-size:15px;color:var(--ink);outline:none;
+  }
+  .meta-row input:focus{border-color:var(--red)}
+
+  .qnum{text-align:center;color:var(--gray);font-size:13px;letter-spacing:3px;margin-bottom:8px}
+  .progress{display:flex;gap:6px;justify-content:center;margin-bottom:22px}
+  .progress span{width:22px;height:4px;border-radius:2px;background:#E4D6B8}
+  .progress span.done{background:var(--gold)}
+  .qtext{
+    background:var(--card);border:1px solid #E8DCC5;border-radius:16px;
+    padding:20px 18px;font-size:17px;line-height:1.9;text-align:center;margin-bottom:20px;
+    box-shadow:0 4px 14px rgba(43,38,34,.06);
+  }
+  .opt{
+    width:100%;text-align:left;padding:15px 16px;margin-bottom:12px;border-radius:14px;
+    border:1.5px solid #E2D5BA;background:var(--card);font-family:inherit;font-size:15px;
+    line-height:1.7;color:var(--ink);cursor:pointer;transition:all .2s ease;
+  }
+  .opt.picked{border-color:var(--red);background:#FBEDEA;color:var(--deep);transform:scale(.98)}
+
+  .result-head{text-align:center;color:var(--gray);font-size:13px;letter-spacing:3px;margin-bottom:16px}
+  .role-card{
+    background:var(--card);border:1.5px solid var(--gold);border-radius:20px;
+    padding:30px 22px;text-align:center;box-shadow:0 8px 24px rgba(43,38,34,.08);margin-bottom:18px;
+  }
+  .role-tag{display:inline-block;background:var(--red);color:#FBF3E3;border-radius:999px;
+    padding:5px 18px;font-size:12px;letter-spacing:3px;margin-bottom:16px}
+  .role-name{font-size:32px;font-weight:700;letter-spacing:5px;margin-bottom:8px}
+  .role-sub{color:var(--gray);font-size:14px;margin-bottom:14px}
+  .role-line{
+    font-size:15px;line-height:2;color:var(--deep);
+    border-top:1px dashed var(--gold);padding-top:14px;
+  }
+  .scroll-note{font-size:13px;color:var(--gray);text-align:center;line-height:2;margin-bottom:18px}
+  .swap-note{background:#FBEDEA;border-radius:12px;padding:10px 14px;font-size:13px;color:var(--deep);
+    text-align:center;margin-bottom:16px;line-height:1.8}
+
+  .list-card{background:var(--card);border:1px solid #E8DCC5;border-radius:18px;padding:8px 18px;margin-bottom:20px}
+  .list-item{display:flex;justify-content:space-between;align-items:center;padding:14px 0;
+    border-bottom:1px dashed #E8DCC5;font-size:15px}
+  .list-item:last-child{border-bottom:none}
+  .list-item .who{color:var(--gray)}
+  .list-item .role{font-weight:700;letter-spacing:2px}
+  .list-item.empty .role{color:#C9BCA4;font-weight:400}
+
+  .footer-note{text-align:center;color:var(--gray);font-size:12px;letter-spacing:2px;margin-top:34px;line-height:2}
+</style>
+</head>
+<body>
+<div class="snow-bg" id="snow"></div>
+<div class="wrap">
+
+  <!-- 首页 -->
+  <section id="v-home" class="view active">
+    <div class="seal">雪</div>
+    <h1>看雪帖</h1>
+    <div class="subtitle">《湖心亭一点》· 入亭问心七帖</div>
+    <div class="divider"></div>
+    <div class="intro-card">
+      <p>大雪三日，湖中人鸟声俱绝。守亭的老僧今夜要写完一部书——但落笔之前，他先要看一看：今夜来的是哪六个人。</p>
+      <div class="rule"><span class="dot">一</span><span>七问问心，凭第一直觉选，不必想太久。</span></div>
+      <div class="rule"><span class="dot">二</span><span>帖毕，僧按你的心性，将你写入稿中——六人六命，各不相同。</span></div>
+      <div class="rule"><span class="dot">三</span><span>认领角色后，向主持人领取楔子本（第一册）。</span></div>
+    </div>
+    <button class="btn" onclick="go('v-register')">入 亭 应 帖</button>
+    <div class="footer-note">湖心亭一点 · 大数据与史学（数智人文）<br>剧本杀 · 看雪帖</div>
+  </section>
+
+  <!-- 登记 -->
+  <section id="v-register" class="view">
+    <div class="seal">名</div>
+    <h1 style="font-size:26px;letter-spacing:6px">报上称呼</h1>
+    <div class="divider"></div>
+    <div class="intro-card" style="text-align:center">
+      <p>老僧问你一声——你姓甚名谁，怎么称呼？</p>
+      <p style="color:var(--gray);font-size:13px">（随便写，好玩的名字最好。第 <b id="regOrder">1</b> 位入座）</p>
+    </div>
+    <div class="meta-row"><input id="playerName" type="text" maxlength="8" placeholder="你的称呼"></div>
+    <button class="btn" onclick="startQuiz()">开 帖</button>
+    <button class="btn ghost" onclick="go('v-home')">先看看，不入座</button>
+  </section>
+
+  <!-- 答题 -->
+  <section id="v-quiz" class="view">
+    <div class="qnum" id="qNum"></div>
+    <div class="progress" id="progress"></div>
+    <div class="qtext" id="qText"></div>
+    <div id="opts"></div>
+  </section>
+
+  <!-- 结果 -->
+  <section id="v-result" class="view">
+    <div class="result-head">看雪帖毕 · 僧观你心性</div>
+    <div class="role-card">
+      <div class="role-tag" id="roleVol">楔子本 · 卷名</div>
+      <div class="role-name" id="roleName"></div>
+      <div class="role-sub" id="roleSub"></div>
+      <div class="role-line" id="roleLine"></div>
+    </div>
+    <div class="swap-note" id="swapNote" style="display:none"></div>
+    <div class="scroll-note" id="resultNote">
+      记住你的角色与卷名，向主持人领取<b>楔子本</b>（第一册）。<br>
+      请把手机交给下一位客人——六人六命，各不相同。
+    </div>
+    <button class="btn" onclick="nextPlayer()">下 一 位 入 亭</button>
+    <button class="btn ghost" onclick="showRoster()">六人未齐，先看名单</button>
+  </section>
+
+  <!-- 名单 -->
+  <section id="v-roster" class="view">
+    <div class="seal" style="background:var(--deep)">册</div>
+    <h1 style="font-size:26px;letter-spacing:6px">湖心亭名册</h1>
+    <div class="subtitle" id="rosterSub"></div>
+    <div class="divider"></div>
+    <div class="list-card" id="rosterList"></div>
+    <button class="btn" id="rosterBtn" onclick="continueFlow()">继 续 入 亭</button>
+    <button class="btn ghost" onclick="resetAll()">收帖 · 全部重来</button>
+    <div class="footer-note">六人六命 · 各不相同的缘法<br>湖心亭一点</div>
+  </section>
+
+</div>
+<script>
+const CHARS = {
+  zhang:{name:'张玮琛', sub:'山阴公子 · 携酒人', vol:'楔子本 · 携酒人卷',
+         line:'笑是蓑衣——热闹底下，藏着一册没写完的稿。'},
+  jiang:{name:'江绍宁', sub:'金陵客 · 热络人', vol:'楔子本 · 热络客卷',
+         line:'热络是甲胄——他敬出的每一杯酒，都在试探。'},
+  xu:{name:'徐名夏', sub:'缟素少年 · 送信人', vol:'楔子本 · 缟素少年卷',
+         line:'不声不响——他替一封没有字的信，守着口。'},
+  yue:{name:'月　生', sub:'温酒童 · 记诗人', vol:'楔子本 · 温酒童卷',
+         line:'字被烧了，诗还在人嘴里。他的名字里，藏着半个字。'},
+  shen:{name:'沈从嘉', sub:'吴门画师 · 无名者', vol:'楔子本 · 画师卷',
+         line:'画满一幅雪，独独不落款——无名，是她的活路。'},
+  wei:{name:'韦妙真', sub:'北来妇人 · 抱箱者', vol:'楔子本 · 北来妇人卷',
+         line:'名字里有真，嘴上无一句真——报名字的那天，真相就回来。'},
+};
+const QUESTIONS = [
+  {q:'大雪三日，闭门无事。你最想做什么？', opts:[
+    ['温一壶酒，等人来喝；人不来，就自己喝','zhang'],
+    ['写一封信，写给一个不知道地址的人','wei'],
+    ['关好门窗，把炭理得足足的','jiang'],
+    ['守着炉子，看炭火里的星子','yue'],
+    ['磨墨，把这场雪画下来','shen'],
+    ['想起一封还没送出去的信','xu']]},
+  {q:'屋里最后一盏灯被风吹灭了。你的第一反应是——', opts:[
+    ['笑出声：正好，看看自己的雪光','zhang'],
+    ['伸手护住怀里或袖中的东西','jiang'],
+    ['坐着不动，等眼睛习惯黑','xu'],
+    ['摸黑去添炭，别让屋里全黑','yue'],
+    ['借窗外雪光，把手里的活做完','shen'],
+    ['心里默数，等火重新亮','wei']]},
+  {q:'若此夜只能带一样东西在身上——', opts:[
+    ['一壶酒','zhang'],
+    ['一封火漆封口的信','jiang'],
+    ['一张没有字的纸','xu'],
+    ['一首背得熟熟的诗','yue'],
+    ['一支用旧了的笔','shen'],
+    ['一只上了锁的旧箱','wei']]},
+  {q:'这一夜若只能给后人留一样东西——', opts:[
+    ['一篇文章','zhang'],
+    ['一幅不落款的画','shen'],
+    ['一首口口相传的诗','yue'],
+    ['一页能还人清白的纸','wei'],
+    ['一个"人还在"的暗号','xu'],
+    ['一段没人知道的沉默','jiang']]},
+  {q:'你最怕失去的东西是——', opts:[
+    ['被人记得的方式','zhang'],
+    ['一个还没说出口的真相','wei'],
+    ['藏了太久的一件事的安全','jiang'],
+    ['等一个回音的可能','xu'],
+    ['待你好的人','yue'],
+    ['看得见美的那双眼睛','shen']]},
+  {q:'天亮雪停，你会——', opts:[
+    ['把夜里的事写成字','zhang'],
+    ['第一个跑到湖边看','yue'],
+    ['补完画上最后一块雪','shen'],
+    ['把该送的东西送到','xu'],
+    ['把夜里的话，在心里再过一遍','wei'],
+    ['趁人未醒，悄悄上路','jiang']]},
+  {q:'定音一问：你觉得，"痴"是什么？', opts:[
+    ['不合时宜的认真','zhang'],
+    ['不声不响的记得','yue'],
+    ['不留名的成全','shen'],
+    ['不认命的追问','wei'],
+    ['不敢言说的守候','xu'],
+    ['不可言说的自保','jiang']]},
+];
+const KEYS = ['zhang','jiang','xu','yue','shen','wei'];
+
+let state = {players:[], taken:{}, name:'', answers:[], qi:0};
+
+function save(){ localStorage.setItem('kanxue_state', JSON.stringify(state)); }
+function load(){
+  try{ const s = JSON.parse(localStorage.getItem('kanxue_state'));
+       if(s && Array.isArray(s.players)) state = s; }catch(e){}
+}
+function go(id){
+  document.querySelectorAll('.view').forEach(v=>v.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  window.scrollTo(0,0);
+}
+function startQuiz(){
+  const v = document.getElementById('playerName').value.trim();
+  state.name = v || '客官第' + (state.players.length+1) + '席';
+  state.answers = []; state.qi = 0; save();
+  renderQ(); go('v-quiz');
+}
+function renderQ(){
+  const i = state.qi, q = QUESTIONS[i];
+  document.getElementById('qNum').textContent = '第 ' + '一二三四五六七'[i] + ' 帖';
+  const pg = document.getElementById('progress');
+  pg.innerHTML = QUESTIONS.map((_,k)=>'<span class="'+(k<=i?'done':'')+'"></span>').join('');
+  document.getElementById('qText').textContent = q.q;
+  const box = document.getElementById('opts'); box.innerHTML='';
+  q.opts.forEach(([t,who])=>{
+    const b = document.createElement('button');
+    b.className='opt'; b.textContent=t;
+    b.onclick=()=>{ b.classList.add('picked');
+      setTimeout(()=>{ state.answers.push(who); state.qi++; save();
+        if(state.qi>=QUESTIONS.length){ assign(); } else { renderQ(); } }, 260);
+    };
+    box.appendChild(b);
+  });
+}
+function assign(){
+  const score={}; KEYS.forEach(k=>score[k]=0);
+  state.answers.forEach((k,idx)=>{ score[k] += 1 + idx*0.05; });
+  const ranked = KEYS.slice().sort((a,b)=>score[b]-score[a]);
+  let pick = null, swapped = false;
+  for(const k of ranked){ if(!state.taken[k]){ pick=k; break; } }
+  if(!pick){ swapped = true; pick = ranked[0]; state.taken[pick+'_dup']=true; }
+  state.players.push({name:state.name, role:pick});
+  save();
+  const c = CHARS[pick];
+  document.getElementById('roleVol').textContent = c.vol;
+  document.getElementById('roleName').textContent = c.name;
+  document.getElementById('roleSub').textContent = state.name + ' · ' + c.sub;
+  document.getElementById('roleLine').textContent = c.line;
+  const sn = document.getElementById('swapNote');
+  if(swapped){ sn.style.display='block';
+    sn.textContent='此缘与先入座者相重，僧作主，与你改了一份缘——你的第二心性是「'+c.name+'」。'; }
+  else { sn.style.display='none'; }
+  const n = document.getElementById('resultNote');
+  n.innerHTML = (state.players.length>=6)
+    ? '六位客人皆已入座。向主持人领取<b>楔子本</b>（第一册），开雪夜。'
+    : '记住你的角色与卷名，向主持人领取<b>楔子本</b>（第一册）。<br>请把手机交给下一位客人——六人六命，各不相同。';
+  go('v-result');
+}
+function nextPlayer(){
+  if(state.players.length>=6){ showRoster(); return; }
+  document.getElementById('regOrder').textContent = state.players.length+1;
+  document.getElementById('playerName').value='';
+  go('v-register');
+}
+function showRoster(){
+  const list = document.getElementById('rosterList');
+  let html='';
+  for(let i=0;i<6;i++){
+    const p = state.players[i];
+    html += p
+      ? '<div class="list-item"><span class="role">'+CHARS[p.role].name+'</span><span class="who">'+p.name+'</span></div>'
+      : '<div class="list-item empty"><span class="role">虚位以待</span><span class="who">第'+(i+1)+'席</span></div>';
+  }
+  list.innerHTML = html;
+  const full = state.players.length>=6;
+  document.getElementById('rosterSub').textContent = full ? '六位客人，皆已入座' : ('已入座 ' + state.players.length + ' / 6');
+  document.getElementById('rosterBtn').style.display = full ? 'none' : 'block';
+  go('v-roster');
+}
+function continueFlow(){ nextPlayer(); }
+function resetAll(){
+  if(!confirm('收帖重来？当前名单将被清空。')) return;
+  state={players:[],taken:{},name:'',answers:[],qi:0}; save();
+  document.getElementById('regOrder').textContent=1;
+  go('v-home');
+}
+// 雪花
+(function(){
+  const bg=document.getElementById('snow');
+  for(let i=0;i<18;i++){
+    const f=document.createElement('div'); f.className='flake'; f.textContent='❄';
+    f.style.left=(Math.random()*100)+'%';
+    f.style.fontSize=(9+Math.random()*13)+'px';
+    f.style.animationDuration=(7+Math.random()*9)+'s';
+    f.style.animationDelay=(-Math.random()*12)+'s';
+    bg.appendChild(f);
+  }
+})();
+// 恢复状态
+load();
+if(state.players.length>0 && state.players.length<6){ document.getElementById('regOrder').textContent = state.players.length+1; }
+if(state.players.length>=6){ showRoster(); }
+</script>
+</body>
+</html>
