@@ -5,9 +5,10 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <title>看雪帖 · 湖心亭一点</title>
 <style>
+  /* 雪夜冷色板：霜蓝 / 黛青 / 冷白，克制留白 */
   :root{
-    --red:#A5191E; --deep:#7C1116; --gold:#C9A86A; --lightgold:#DCC08A;
-    --paper:#F7F1E3; --card:#FFFDF7; --ink:#2B2622; --gray:#8A7F72;
+    --accent:#3A5A78; --accent-deep:#243B52; --frost:#8FA8BD; --frost-light:#BFD0DC;
+    --paper:#EDF2F6; --card:#F9FBFD; --ink:#22303E; --gray:#7A8A99;
   }
   *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
   body{
@@ -17,87 +18,87 @@
   }
   .wrap{width:100%;max-width:480px;min-height:100vh;padding:28px 22px 60px;position:relative}
   .snow-bg{position:fixed;inset:0;pointer-events:none;z-index:0;overflow:hidden}
-  .flake{position:absolute;top:-20px;color:#C9A86A;opacity:.35;animation:fall linear infinite}
+  .flake{position:absolute;top:-20px;color:#A9C2D4;opacity:.42;animation:fall linear infinite}
   @keyframes fall{to{transform:translateY(110vh) translateX(20px)}}
   .view{display:none;position:relative;z-index:1;animation:fadein .5s ease}
   .view.active{display:block}
   @keyframes fadein{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:none}}
 
   .seal{
-    width:64px;height:64px;border-radius:12px;background:var(--red);color:#FBF3E3;
+    width:64px;height:64px;border-radius:12px;background:var(--accent);color:#F2F7FA;
     display:flex;align-items:center;justify-content:center;font-size:26px;font-weight:700;
-    margin:0 auto 14px;box-shadow:0 6px 18px rgba(165,25,30,.28);letter-spacing:2px;
+    margin:0 auto 14px;box-shadow:0 6px 18px rgba(58,90,120,.25);letter-spacing:2px;
   }
   h1{text-align:center;font-size:34px;letter-spacing:10px;margin-bottom:6px}
   .subtitle{text-align:center;color:var(--gray);font-size:14px;letter-spacing:2px;margin-bottom:26px}
-  .divider{width:56px;height:2px;background:var(--gold);margin:0 auto 26px;border-radius:2px}
+  .divider{width:56px;height:2px;background:var(--frost);margin:0 auto 26px;border-radius:2px}
 
   .intro-card{
-    background:var(--card);border:1px solid #E8DCC5;border-radius:18px;padding:22px 20px;
-    line-height:2;font-size:15px;box-shadow:0 4px 16px rgba(43,38,34,.06);margin-bottom:20px;
+    background:var(--card);border:1px solid #DCE6EE;border-radius:18px;padding:22px 20px;
+    line-height:2;font-size:15px;box-shadow:0 4px 16px rgba(34,48,62,.06);margin-bottom:20px;
   }
   .intro-card p{margin-bottom:10px}
   .rule{display:flex;gap:10px;align-items:flex-start;margin-bottom:10px;font-size:14px}
-  .rule .dot{width:22px;height:22px;border-radius:50%;background:var(--lightgold);color:var(--deep);
+  .rule .dot{width:22px;height:22px;border-radius:50%;background:var(--frost-light);color:var(--accent-deep);
     display:flex;align-items:center;justify-content:center;font-size:12px;flex-shrink:0;margin-top:3px}
 
   .btn{
     display:block;width:100%;padding:16px;border:none;border-radius:14px;
-    background:var(--red);color:#FBF3E3;font-size:17px;letter-spacing:6px;
-    font-family:inherit;cursor:pointer;box-shadow:0 6px 16px rgba(165,25,30,.25);
+    background:var(--accent);color:#F2F7FA;font-size:17px;letter-spacing:6px;
+    font-family:inherit;cursor:pointer;box-shadow:0 6px 16px rgba(58,90,120,.22);
     transition:transform .15s ease, box-shadow .15s ease;
   }
   .btn:active{transform:scale(.97)}
-  .btn.ghost{background:transparent;color:var(--deep);border:1.5px solid var(--gold);
+  .btn.ghost{background:transparent;color:var(--accent-deep);border:1.5px solid var(--frost);
     box-shadow:none;font-size:15px;margin-top:12px}
 
   .meta-row{display:flex;gap:10px;margin-bottom:18px}
   .meta-row input{
-    flex:1;padding:13px 14px;border:1.5px solid var(--gold);border-radius:12px;
+    flex:1;padding:13px 14px;border:1.5px solid var(--frost);border-radius:12px;
     background:var(--card);font-family:inherit;font-size:15px;color:var(--ink);outline:none;
   }
-  .meta-row input:focus{border-color:var(--red)}
+  .meta-row input:focus{border-color:var(--accent)}
 
   .qnum{text-align:center;color:var(--gray);font-size:13px;letter-spacing:3px;margin-bottom:8px}
   .progress{display:flex;gap:6px;justify-content:center;margin-bottom:22px}
-  .progress span{width:22px;height:4px;border-radius:2px;background:#E4D6B8}
-  .progress span.done{background:var(--gold)}
+  .progress span{width:22px;height:4px;border-radius:2px;background:#DCE6EE}
+  .progress span.done{background:var(--frost)}
   .qtext{
-    background:var(--card);border:1px solid #E8DCC5;border-radius:16px;
+    background:var(--card);border:1px solid #DCE6EE;border-radius:16px;
     padding:20px 18px;font-size:17px;line-height:1.9;text-align:center;margin-bottom:20px;
-    box-shadow:0 4px 14px rgba(43,38,34,.06);
+    box-shadow:0 4px 14px rgba(34,48,62,.06);
   }
   .opt{
     width:100%;text-align:left;padding:15px 16px;margin-bottom:12px;border-radius:14px;
-    border:1.5px solid #E2D5BA;background:var(--card);font-family:inherit;font-size:15px;
+    border:1.5px solid #D3E0EA;background:var(--card);font-family:inherit;font-size:15px;
     line-height:1.7;color:var(--ink);cursor:pointer;transition:all .2s ease;
   }
-  .opt.picked{border-color:var(--red);background:#FBEDEA;color:var(--deep);transform:scale(.98)}
+  .opt.picked{border-color:var(--accent);background:#E8F1F7;color:var(--accent-deep);transform:scale(.98)}
 
   .result-head{text-align:center;color:var(--gray);font-size:13px;letter-spacing:3px;margin-bottom:16px}
   .role-card{
-    background:var(--card);border:1.5px solid var(--gold);border-radius:20px;
-    padding:30px 22px;text-align:center;box-shadow:0 8px 24px rgba(43,38,34,.08);margin-bottom:18px;
+    background:var(--card);border:1.5px solid var(--frost);border-radius:20px;
+    padding:30px 22px;text-align:center;box-shadow:0 8px 24px rgba(34,48,62,.09);margin-bottom:18px;
   }
-  .role-tag{display:inline-block;background:var(--red);color:#FBF3E3;border-radius:999px;
+  .role-tag{display:inline-block;background:var(--accent);color:#F2F7FA;border-radius:999px;
     padding:5px 18px;font-size:12px;letter-spacing:3px;margin-bottom:16px}
   .role-name{font-size:32px;font-weight:700;letter-spacing:5px;margin-bottom:8px}
   .role-sub{color:var(--gray);font-size:14px;margin-bottom:14px}
   .role-line{
-    font-size:15px;line-height:2;color:var(--deep);
-    border-top:1px dashed var(--gold);padding-top:14px;
+    font-size:15px;line-height:2;color:var(--accent-deep);
+    border-top:1px dashed var(--frost);padding-top:14px;
   }
   .scroll-note{font-size:13px;color:var(--gray);text-align:center;line-height:2;margin-bottom:18px}
-  .swap-note{background:#FBEDEA;border-radius:12px;padding:10px 14px;font-size:13px;color:var(--deep);
+  .swap-note{background:#E8F1F7;border-radius:12px;padding:10px 14px;font-size:13px;color:var(--accent-deep);
     text-align:center;margin-bottom:16px;line-height:1.8}
 
-  .list-card{background:var(--card);border:1px solid #E8DCC5;border-radius:18px;padding:8px 18px;margin-bottom:20px}
+  .list-card{background:var(--card);border:1px solid #DCE6EE;border-radius:18px;padding:8px 18px;margin-bottom:20px}
   .list-item{display:flex;justify-content:space-between;align-items:center;padding:14px 0;
-    border-bottom:1px dashed #E8DCC5;font-size:15px}
+    border-bottom:1px dashed #DCE6EE;font-size:15px}
   .list-item:last-child{border-bottom:none}
   .list-item .who{color:var(--gray)}
   .list-item .role{font-weight:700;letter-spacing:2px}
-  .list-item.empty .role{color:#C9BCA4;font-weight:400}
+  .list-item.empty .role{color:#9FB2C2;font-weight:400}
 
   .footer-note{text-align:center;color:var(--gray);font-size:12px;letter-spacing:2px;margin-top:34px;line-height:2}
 </style>
@@ -164,13 +165,13 @@
 
   <!-- 名单 -->
   <section id="v-roster" class="view">
-    <div class="seal" style="background:var(--deep)">册</div>
+    <div class="seal" style="background:var(--accent-deep)">册</div>
     <h1 style="font-size:26px;letter-spacing:6px">湖心亭名册</h1>
     <div class="subtitle" id="rosterSub"></div>
     <div class="divider"></div>
     <div class="list-card" id="rosterList"></div>
     <button class="btn" id="rosterBtn" onclick="continueFlow()">继 续 入 亭</button>
-    <button class="btn ghost" onclick="resetAll()">收帖 · 全部重来</button>
+    <button class="btn ghost" id="resetBtn" onclick="resetAll()">收帖 · 全部重来</button>
     <div class="footer-note">六人六命 · 各不相同的缘法<br>湖心亭一点</div>
   </section>
 
@@ -243,12 +244,15 @@ const QUESTIONS = [
 ];
 const KEYS = ['zhang','jiang','xu','yue','shen','wei'];
 
-let state = {players:[], taken:{}, name:'', answers:[], qi:0};
+// v2：去重改为按「已入座名单」现算；旧存档（含重复名单）自动作废
+const STATE_V = 2;
+let state = {v:STATE_V, players:[], name:'', answers:[], qi:0};
+let locking = false;
 
 function save(){ localStorage.setItem('kanxue_state', JSON.stringify(state)); }
 function load(){
   try{ const s = JSON.parse(localStorage.getItem('kanxue_state'));
-       if(s && Array.isArray(s.players)) state = s; }catch(e){}
+       if(s && s.v === STATE_V && Array.isArray(s.players)) state = s; }catch(e){}
 }
 function go(id){
   document.querySelectorAll('.view').forEach(v=>v.classList.remove('active'));
@@ -256,6 +260,7 @@ function go(id){
   window.scrollTo(0,0);
 }
 function startQuiz(){
+  if(state.players.length>=6){ showRoster(); return; }
   const v = document.getElementById('playerName').value.trim();
   state.name = v || '客官第' + (state.players.length+1) + '席';
   state.answers = []; state.qi = 0; save();
@@ -271,20 +276,26 @@ function renderQ(){
   q.opts.forEach(([t,who])=>{
     const b = document.createElement('button');
     b.className='opt'; b.textContent=t;
-    b.onclick=()=>{ b.classList.add('picked');
-      setTimeout(()=>{ state.answers.push(who); state.qi++; save();
+    b.onclick=()=>{
+      if(locking) return;
+      locking = true;
+      box.querySelectorAll('.opt').forEach(x=>x.disabled=true);
+      b.classList.add('picked');
+      setTimeout(()=>{ state.answers.push(who); state.qi++; locking=false; save();
         if(state.qi>=QUESTIONS.length){ assign(); } else { renderQ(); } }, 260);
     };
     box.appendChild(b);
   });
 }
 function assign(){
+  if(state.players.length>=6){ showRoster(); return; }
   const score={}; KEYS.forEach(k=>score[k]=0);
-  state.answers.forEach((k,idx)=>{ score[k] += 1 + idx*0.05; });
+  state.answers.forEach((k,idx)=>{ if(score[k]!==undefined) score[k] += 1 + idx*0.05; });
   const ranked = KEYS.slice().sort((a,b)=>score[b]-score[a]);
-  let pick = null, swapped = false;
-  for(const k of ranked){ if(!state.taken[k]){ pick=k; break; } }
-  if(!pick){ swapped = true; pick = ranked[0]; state.taken[pick+'_dup']=true; }
+  // 已入座的角色现算，绝不依赖可能失效的缓存字段
+  const occupied = new Set(state.players.map(p=>p.role));
+  const pick = ranked.find(k=>!occupied.has(k)) || ranked[0];
+  const swapped = pick !== ranked[0];
   state.players.push({name:state.name, role:pick});
   save();
   const c = CHARS[pick];
@@ -294,7 +305,7 @@ function assign(){
   document.getElementById('roleLine').textContent = c.line;
   const sn = document.getElementById('swapNote');
   if(swapped){ sn.style.display='block';
-    sn.textContent='此缘与先入座者相重，僧作主，与你改了一份缘——你的第二心性是「'+c.name+'」。'; }
+    sn.textContent='此缘已有先入座者，僧作主，为你另择一卷——今夜得「'+c.name+'」。'; }
   else { sn.style.display='none'; }
   const n = document.getElementById('resultNote');
   n.innerHTML = (state.players.length>=6)
@@ -324,11 +335,22 @@ function showRoster(){
   go('v-roster');
 }
 function continueFlow(){ nextPlayer(); }
+// 不用 confirm()——部分内嵌浏览器/预览面板会静默禁用系统弹窗
+let resetArmed = null;
 function resetAll(){
-  if(!confirm('收帖重来？当前名单将被清空。')) return;
-  state={players:[],taken:{},name:'',answers:[],qi:0}; save();
-  document.getElementById('regOrder').textContent=1;
-  go('v-home');
+  const btn = document.getElementById('resetBtn');
+  const now = Date.now();
+  if(resetArmed && now - resetArmed < 3000){
+    state={v:STATE_V, players:[], name:'', answers:[], qi:0}; save();
+    resetArmed = null; btn.textContent='收帖 · 全部重来';
+    document.getElementById('regOrder').textContent=1;
+    go('v-home');
+  } else {
+    resetArmed = now;
+    btn.textContent = '再点一次 · 确认清空名单';
+    setTimeout(()=>{ if(resetArmed && Date.now()-resetArmed >= 3000){
+      resetArmed = null; btn.textContent='收帖 · 全部重来'; } }, 3100);
+  }
 }
 // 雪花
 (function(){
