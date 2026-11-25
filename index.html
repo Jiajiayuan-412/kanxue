@@ -147,12 +147,9 @@
 
   <!-- 结果 -->
   <section id="v-result" class="view">
-    <div class="result-head">看雪帖毕 · 僧观你心性</div>
+    <div class="result-head">看雪帖毕</div>
     <div class="role-card">
-      <div class="role-tag" id="roleVol">楔子本 · 卷名</div>
       <div class="role-name" id="roleName"></div>
-      <div class="role-sub" id="roleSub"></div>
-      <div class="role-line" id="roleLine"></div>
     </div>
     <div class="swap-note" id="swapNote" style="display:none"></div>
     <div class="scroll-note" id="resultNote">
@@ -300,10 +297,7 @@ function assign(){
   state.players.push({name:state.name, role:pick});
   save();
   const c = CHARS[pick];
-  document.getElementById('roleVol').textContent = c.title;
   document.getElementById('roleName').textContent = c.scene;
-  document.getElementById('roleSub').textContent = state.name + ' · ' + c.sub;
-  document.getElementById('roleLine').textContent = c.line;
   const sn = document.getElementById('swapNote');
   if(swapped){ sn.style.display='block';
     sn.textContent='此缘已有先入座者，僧作主，为你另择一卷——今夜得「'+c.scene+'」。'; }
