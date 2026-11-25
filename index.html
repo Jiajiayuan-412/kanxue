@@ -178,18 +178,18 @@
 </div>
 <script>
 const CHARS = {
-  // v3：测试阶段不出现任何真名——只给身份引子，真名留给剧本正文揭露
-  zhang:{title:'山阴公子', sub:'爱雪，爱酒 · 说是逃来看雪的', vol:'楔子本 · 断桥残雪卷',
+  // v3：测试阶段不出现任何真名——大标题为西湖景名（即楔子本卷名），身份引子作小徽章
+  zhang:{title:'山阴公子', scene:'断桥残雪', sub:'爱雪，爱酒 · 说是逃来看雪的',
          line:'笑是蓑衣——热闹底下，藏着一册没写完的稿。'},
-  jiang:{title:'金陵客', sub:'见人先敬酒 · 讳言来处', vol:'楔子本 · 南屏晚钟卷',
+  jiang:{title:'金陵客', scene:'南屏晚钟', sub:'见人先敬酒 · 讳言来处',
          line:'热络是甲胄——他敬出的每一杯酒，都在试探。'},
-  xu:{title:'缟素少年', sub:'一身缟素 · 话不多的送信人', vol:'楔子本 · 苏堤春晓卷',
+  xu:{title:'缟素少年', scene:'苏堤春晓', sub:'一身缟素 · 话不多的送信人',
          line:'不声不响——他替一封没有字的信，守着口。'},
-  yue:{title:'温酒童', sub:'亭中温酒的少年 · 手脚麻利', vol:'楔子本 · 三潭印月卷',
+  yue:{title:'温酒童', scene:'三潭印月', sub:'亭中温酒的少年 · 手脚麻利',
          line:'字被烧了，诗还在人嘴里。'},
-  shen:{title:'无名画师', sub:'吴门来的画师 · 画从不落款', vol:'楔子本 · 雷峰夕照卷',
+  shen:{title:'无名画师', scene:'雷峰夕照', sub:'吴门来的画师 · 画从不落款',
          line:'画满一幅雪，独独不落款——无名，是她的活路。'},
-  wei:{title:'北来妇人', sub:'自称投亲不遇 · 在船上帮工', vol:'楔子本 · 平湖秋月卷',
+  wei:{title:'北来妇人', scene:'平湖秋月', sub:'自称投亲不遇 · 在船上帮工',
          line:'话是真的，名字是假的——何时说真话，只有她自己能定。'},
 };
 const QUESTIONS = [
@@ -300,18 +300,18 @@ function assign(){
   state.players.push({name:state.name, role:pick});
   save();
   const c = CHARS[pick];
-  document.getElementById('roleVol').textContent = c.vol;
-  document.getElementById('roleName').textContent = c.title;
+  document.getElementById('roleVol').textContent = c.title;
+  document.getElementById('roleName').textContent = c.scene;
   document.getElementById('roleSub').textContent = state.name + ' · ' + c.sub;
   document.getElementById('roleLine').textContent = c.line;
   const sn = document.getElementById('swapNote');
   if(swapped){ sn.style.display='block';
-    sn.textContent='此缘已有先入座者，僧作主，为你另择一卷——今夜得「'+c.title+'」。'; }
+    sn.textContent='此缘已有先入座者，僧作主，为你另择一卷——今夜得「'+c.scene+'」。'; }
   else { sn.style.display='none'; }
   const n = document.getElementById('resultNote');
   n.innerHTML = (state.players.length>=6)
-    ? '六位客人皆已入座。向主持人领取<b>楔子本</b>（第一册），开雪夜。'
-    : '记住你的角色与卷名，向主持人领取<b>楔子本</b>（第一册）。<br>请把手机交给下一位客人——六人六命，各不相同。';
+    ? '六位客人皆已入座。向主持人领取<b>楔子本 · '+c.scene+'卷</b>（第一册），开雪夜。'
+    : '记住你的卷名「'+c.scene+'」，向主持人领取<b>楔子本</b>（第一册）。<br>请把手机交给下一位客人——六人六命，各不相同。';
   go('v-result');
 }
 function nextPlayer(){
@@ -326,7 +326,7 @@ function showRoster(){
   for(let i=0;i<6;i++){
     const p = state.players[i];
     html += p
-      ? '<div class="list-item"><span class="role">'+CHARS[p.role].title+'</span><span class="who">'+p.name+'</span></div>'
+      ? '<div class="list-item"><span class="role">'+CHARS[p.role].scene+'</span><span class="who">'+p.name+'</span></div>'
       : '<div class="list-item empty"><span class="role">虚位以待</span><span class="who">第'+(i+1)+'席</span></div>';
   }
   list.innerHTML = html;
